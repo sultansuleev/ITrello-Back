@@ -16,9 +16,16 @@ public class JwtRequest implements Serializable {
     private String email;
     private String password;
     private String fullName;
+    private String newPassword;
 
     JwtRequest(String email, String password){
         this.email = email;
         this.password = password;
+    }
+
+    public JwtRequest(String email, String fullName, String newPassword) {
+        this.email = email;
+        this.fullName = fullName;
+        this.newPassword = newPassword;
     }
 }

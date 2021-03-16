@@ -8,4 +8,7 @@ public interface UserService extends UserDetailsService {
     Boolean existsByEmail(String email);
     Users createUser(Users user);
 
+    String getPasswordByEmail(String email);
+    Users getByEmail(String email);
+
 }

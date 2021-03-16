@@ -15,6 +15,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -36,10 +39,12 @@ public class JwtAuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @RequestMapping(value = "/auth")
     public ResponseEntity<?> auth(@RequestBody JwtRequest request) throws Exception{
 
-        authenticate(request.getEmail(), request.getPassword());
+        authenticate(request.getEmail(), passwordEncoder.matches(request.getPassword(), userService.getPasswordByEmail(request.getEmail()))?request.getPassword():"re");
         final UserDetails userDetails =
                 userService.loadUserByUsername(request.getEmail());
 
@@ -49,7 +54,14 @@ public class JwtAuthController {
 
     }
 
-    @PutMapping(value = "/signup")
+    @GetMapping(value = "/getUser/{token}")
+    public ResponseEntity<?> getUser(@PathVariable String token) {
+        String email = jwtTokenGenerator.getEmailFromToken(token);
+        Users user = (Users) userService.loadUserByUsername(email);
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping(value = "/signup")
     public ResponseEntity<?> register(@RequestBody JwtRequest request){
         if(userService.existsByEmail(request.getEmail())){
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
@@ -58,11 +70,10 @@ public class JwtAuthController {
         Users user = new Users();
         user.setEmail(request.getEmail());
         user.setFullName(request.getFullName());
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         Set<Roles> roles = new HashSet<>();
         roles.add(roleService.getRoleByName("ROLE_USER"));
         userService.createUser(user);
-
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }
