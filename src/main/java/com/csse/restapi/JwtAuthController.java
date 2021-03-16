@@ -43,7 +43,6 @@ public class JwtAuthController {
 
     @RequestMapping(value = "/auth")
     public ResponseEntity<?> auth(@RequestBody JwtRequest request) throws Exception{
-
         authenticate(request.getEmail(), passwordEncoder.matches(request.getPassword(), userService.getPasswordByEmail(request.getEmail()))?request.getPassword():"re");
         final UserDetails userDetails =
                 userService.loadUserByUsername(request.getEmail());
@@ -78,8 +77,7 @@ public class JwtAuthController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }
 
-    public void authenticate(String email, String password) throws Exception{
-
+    public void authenticate(String email, String password) throws Exception {
         try{
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));

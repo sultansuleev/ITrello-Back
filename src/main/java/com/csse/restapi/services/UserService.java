@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
 
+
     Boolean existsByEmail(String email);
     Users createUser(Users user);
 

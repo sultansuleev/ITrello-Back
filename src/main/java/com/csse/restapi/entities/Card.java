@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,5 +20,7 @@ public class Card {
     private Long id;
     private String name;
     @Column(name="added_date")
-    private String addedDate;
+    private Date addedDate;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Users user;
 }
