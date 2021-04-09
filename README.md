@@ -1,7 +1,7 @@
 
 # ITrello Back
-My Backend RESTful API for my project in course "Java EE Business Component and Web-services Developer".\n
-Frontend part of the project is located [here](https://github.com/sultansuleev/ITrello-Front)
+My Backend RESTful API for my project in course "Java EE Business Component and Web-services Developer".
+- Frontend part of the project is located [here](https://github.com/sultansuleev/ITrello-Front)
 
 ## Programming Language / Tools
 
